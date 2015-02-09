@@ -1,7 +1,6 @@
-// Range functions
-// Loosely inspired by https://github.com/Flightphase/ofxRange/
-
 WW.Range = function(begin, end){
+	// Range functions
+	// Loosely inspired by https://github.com/Flightphase/ofxRange/
 	if (begin > end){
 		var tmp = end;
 		end = begin;
@@ -21,7 +20,10 @@ WW.Range.prototype = {
 
 		grow: function(other){
 			//FIXME: Should mayber return an array of ranges instead?
-			return new WW.Range (Math.min(begin, other.begin), Math.max(end, other.end));
+			return new WW.Range (
+					Math.min(begin, other.begin), 
+					Math.max(end, other.end)
+				);
 		},
 
 		contains: function(other){
@@ -43,10 +45,17 @@ WW.Range.prototype = {
 
 		intersection : function(other){
 			if (this.overlaps(other)){
-				return new WW.Range (Math.max(begin, other.begin), Math.min(end, other.end));	
+				return new WW.Range (
+							Math.max(begin, other.begin), 
+							Math.min(end, other.end)
+						 );	
 			} else {
 				//FIXME: Return empty range or something
 				return	null;
 			}
 		},
 };
+
+WW.Range.Tree = function(){
+	//TODO (OS): Stub
+ };
