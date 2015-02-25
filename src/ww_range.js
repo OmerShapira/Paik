@@ -8,6 +8,7 @@ WW.Range = function(begin, end){
 	}
 	_begin	= begin;
 	_end	= end;
+	Object.freeze(this);
 };
 
 WW.Range.prototype = {
@@ -28,7 +29,7 @@ WW.Range.prototype = {
 
 		contains: function(other){
 			if (typeof(other) === 'number'){
-				return (begin <= other) && (end >=other);
+				return (begin <= other)   && (end >= other);
 			} else {
 				return (min <= other.min) && (max >= other.max);
 			}
@@ -57,34 +58,33 @@ WW.Range.prototype = {
 };
 
 
-WW.Range.Tree = function(){
-	var root = WW.Range.Tree.Junction();
+//TODO (OS): Use Bins instead of tree
+// Make clips composable only by creating new clips
+
+WW.RangeTree = function(){
+	var root = WW.Range.Tree.Node();
 	//TODO (OS): Implement
 	console.error("NOT IMPLEMENTED");
 };
 
-WW.Range.Tree.Junction = function(){
+WW.RangeTree.Node = function(){
 	var rangeSpan = null;
 	//TODO (OS): Implement
 	console.error("NOT IMPLEMENTED");
 };
 
-WW.Range.Tree.Leaf = function(){
+WW.RangeTree.Leaf = function(rangeObj){
+	var _range = rangeObj
 	//TODO (OS): Implement
 	console.error("NOT IMPLEMENTED");
 };
 
-WW.Range.Tree.prototype.Add = function(item){
+WW.RangeTree.prototype.Add = function(item){
 	//TODO (OS): Implement
 	console.error("NOT IMPLEMENTED");
 };
 
-WW.Range.Tree.prototype.Remove = function(item){
-	//TODO (OS): Implement
-	console.error("NOT IMPLEMENTED");
-};
-
-WW.Range.Tree.prototype.GetRange = function(begin, end){
+WW.RangeTree.prototype.GetRange = function(begin, end){
 	//TODO (OS): Implement
 	console.error("NOT IMPLEMENTED");
 };

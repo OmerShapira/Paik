@@ -1,39 +1,30 @@
-
 WW.TimecodeController = function(getTime){
-	TimeQuery = getTime;
+	timeQuery = getTime;
+	WW.Player.Subscribe(this)
 };
 
 WW.TimecodeController.prototype = {
-	TimeQuery   = null,
-	subscribers = [],
-	interval_ms = 20,
-	currentTime	= 0,
-	interval_id = null,
+	subscribers : [],
+	currentTimecode	: 0,
 
 	Subscribe : function(callback){
 		this.subscribers.push(callback);
 	},
 
-	Tick : function(time){
+	SendTimecodeTick : function(time){
 		var action = function(currentValue){
 				currentValue(time);
 			};
 		this.subscribers.forEach(action);
 	},
 
-	Start : function(){
-		var action = function(){
-			var read_time = getTime();
-			if (read_time != currentTime){
-				currentTime	= read_time;
-				Tick(currentTime);
-			}
-		};
-		interval_id = setInterval(action, _interval_ms);
-	},
+	Tick : function(){
+		var read_timecode = timeQuery();
+		console.log(read_timecode);
+		if (read_timecode != this.currentTimecode){
+			this.currentTimecode	= read_timecode;
+			this.SendTimecodeTick(read_timecode);
+		}
+	}
 
-	Stop : function(){
-		clearInterval(interval_id);
-		interval_id = null;
-	},
 };

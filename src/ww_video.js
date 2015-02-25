@@ -15,7 +15,7 @@ WW.Video.FromUrl = function (url){
 
 WW.Video.prototype = {
 
-	get Time(){
+	Time : function(){
 		//Millisecond time.
 		return Math.trunc(this.videoElement.currentTime*1000);
 	},
@@ -38,10 +38,11 @@ WW.Video.prototype = {
 	},
 
 	StartPlaying : function(){
-		var ve = this.videoElement;
-		ve.play();
-		ve.muted = true;
-		ve.loop = true;
+		var element = this.videoElement;
+		element.play();
+		//TODO (OS): Remove before use
+		element.muted = true;
+		element.loop = true;
 	},
 
 	GetMaterial : function(){
@@ -71,13 +72,6 @@ WW.Video.prototype = {
 	},
 
 	Interrupted : function(){},
-
-	GetTimecodeController : function(){
-		var self = this;
-		var query = function(){
-			return self.Time;
-		};
-		return new WW.TimecodeController(query);
-	}
+	TimecodeController : new WW.TimecodeController(this.Time.bind(this))
 };
 
