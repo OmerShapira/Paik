@@ -1,6 +1,6 @@
 WW.TimecodeController = function(getTime){
 	timeQuery = getTime;
-	WW.Player.Subscribe(this)
+	WW.Player.Subscribe(this.Tick.bind(this));
 };
 
 WW.TimecodeController.prototype = {
@@ -20,7 +20,6 @@ WW.TimecodeController.prototype = {
 
 	Tick : function(){
 		var read_timecode = timeQuery();
-		console.log(read_timecode);
 		if (read_timecode != this.currentTimecode){
 			this.currentTimecode	= read_timecode;
 			this.SendTimecodeTick(read_timecode);

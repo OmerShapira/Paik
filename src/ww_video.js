@@ -1,6 +1,6 @@
-WW.Video = function(videoElement){
+WW.Video = function(video_element){
 	time = -0.01; //Before start
-	this.videoElement = videoElement;
+	videoElement = video_element;
 	this.Initialize();
 };
 
@@ -17,15 +17,15 @@ WW.Video.prototype = {
 
 	Time : function(){
 		//Millisecond time.
-		return Math.trunc(this.videoElement.currentTime*1000);
+		return Math.trunc(videoElement.currentTime * 1000);
 	},
 
 	Initialize : function(){
 		var w = window.innerWidth, h = window.innerHeight;
 		videoImage = document.createElement( 'canvas' );
 
-		videoImage.width = this.videoElement.videoWidth;
-		videoImage.height = this.videoElement.videoHeight;
+		videoImage.width = videoElement.videoWidth;
+		videoImage.height = videoElement.videoHeight;
 		console.log('Video Size :' + videoImage.width + ' ' + videoImage.height);
 
 		videoContext = videoImage.getContext('2d');
@@ -38,11 +38,11 @@ WW.Video.prototype = {
 	},
 
 	StartPlaying : function(){
-		var element = this.videoElement;
-		element.play();
+		
+		videoElement.play();
 		//TODO (OS): Remove before use
-		element.muted = true;
-		element.loop = true;
+		videoElement.muted = true;
+		videoElement.loop = true;
 	},
 
 	GetMaterial : function(){
@@ -62,9 +62,8 @@ WW.Video.prototype = {
 	},
 
 	Tick : function() {
-		var video = this.videoElement;
-		if ( video.readyState === video.HAVE_ENOUGH_DATA ) {
-			this.context.drawImage( video, 0, 0 );
+		if ( videoElement.readyState === videoElement.HAVE_ENOUGH_DATA ) {
+			this.context.drawImage( videoElement, 0, 0 );
 			if ( this.texture ){
 				this.texture.needsUpdate = true;
 			}
@@ -72,6 +71,10 @@ WW.Video.prototype = {
 	},
 
 	Interrupted : function(){},
-	TimecodeController : new WW.TimecodeController(this.Time.bind(this))
+
+	GetTimecodeController : function(){
+		var c = new WW.TimecodeController(this.Time);
+		return c;
+	}
 };
 

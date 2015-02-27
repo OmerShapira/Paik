@@ -23,9 +23,7 @@ WW.Player = (
 
 		function Tick(time){
 			subscribers.forEach(
-					function(x){
-						x.Tick(time);
-					}
+					function(f){f(time);}
 				);
 			}
 
