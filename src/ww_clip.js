@@ -1,5 +1,7 @@
-WW.Clip = function (resources, range, playFunction){
-	this.range = range;
+"use strict";
+WW.Clip = function (resources, interval, playFunction){
+	this.interval = interval;
+	interval.clip = this;
 	this.resources = resources;
 	this.playFunction = playFunction;
 };
