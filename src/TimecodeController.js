@@ -1,9 +1,9 @@
-WW.TimecodeController = function(getTime){
-	timeQuery = getTime;
-	WW.Player.Subscribe(this.Tick.bind(this));
+Pk.TimecodeController = function(getTime){
+	timePoll = getTime;
+	Pk.Player.Subscribe(this.Tick.bind(this));
 };
 
-WW.TimecodeController.prototype = {
+Pk.TimecodeController.prototype = {
 	subscribers : [],
 	currentTimecode	: 0,
 
@@ -19,7 +19,7 @@ WW.TimecodeController.prototype = {
 	},
 
 	Tick : function(){
-		var read_timecode = timeQuery();
+		var read_timecode = timePoll();
 		if (read_timecode != this.currentTimecode){
 			this.currentTimecode	= read_timecode;
 			this.SendTimecodeTick(read_timecode);

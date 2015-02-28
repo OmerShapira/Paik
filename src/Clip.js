@@ -1,12 +1,12 @@
 "use strict";
-WW.Clip = function (resources, interval, playFunction){
-	this.interval = interval;
-	interval.clip = this;
-	this.resources = resources;
-	this.playFunction = playFunction;
+Pk.Clip = function (from, to, resources, playFunction){
+	this.interval 		= new Pk.Interval(from,to);
+	this.interval.clip 	= this;
+	this.resources 		= resources;
+	this.playFunction 	= playFunction;
 };
 
-WW.Clip.prototype = {
+Pk.Clip.prototype = {
 	
 	Preload : function(){
 		resources.forEach(function(x){x.Load();});

@@ -1,22 +1,22 @@
-WW.Video = function(video_element){
+Pk.Video = function(video_element){
 	time = -0.01; //Before start
 	videoElement = video_element;
 	this.Initialize();
 };
 
-WW.Video.FromUrl = function (url){
+Pk.Video.FromUrl = function (url){
 	var videoElement = document.createElement('video');
 	//TODO: Add cases for more than one url
 	var source = document.createElement('source');
 	source.src = url;
 	videoElement.appendChild(source);
-	return new WW.Video(videoElement);
+	return new Pk.Video(videoElement);
 }
 
-WW.Video.prototype = {
+Pk.Video.prototype = {
 
+	//Returns milisecond time.
 	Time : function(){
-		//Millisecond time.
 		return Math.trunc(videoElement.currentTime * 1000);
 	},
 
@@ -48,7 +48,7 @@ WW.Video.prototype = {
 	GetMaterial : function(){
 		
 		//FIXME (OS): Make sure this works with THREE
-		//TODO (OS): Make this a proper mixin
+		//TODO (OS): This is impure, make this a proper mixin.
 		if (! this.texture){
 			videoTexture = new THREE.Texture( videoImage );
 			videoTexture.minFilter = THREE.LinearFilter;
@@ -73,7 +73,7 @@ WW.Video.prototype = {
 	Interrupted : function(){},
 
 	GetTimecodeController : function(){
-		var c = new WW.TimecodeController(this.Time);
+		var c = new Pk.TimecodeController(this.Time);
 		return c;
 	}
 };

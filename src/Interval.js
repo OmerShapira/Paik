@@ -9,38 +9,38 @@
 
 "use strict";
 
-WW.Interval = function(from, to) {
-    this.id = ++WW.Interval.prototype.id;
+Pk.Interval = function(from, to) {
+    this.id = ++Pk.Interval.prototype.id;
     this.from = from;
     this.to = to;
     this.overlap = {};
   }
   
-  WW.Interval.prototype.id = 0;
-  WW.Interval.const = WW.Interval.prototype;
-  WW.Interval.prototype.SUBSET = 1;
-  WW.Interval.prototype.DISJOINT = 2;
-  WW.Interval.prototype.INTERSECT_OR_SUPERSET = 3;
-  WW.Interval.prototype.clip = null;
+  Pk.Interval.prototype.id = 0;
+  Pk.Interval.const = Pk.Interval.prototype;
+  Pk.Interval.prototype.SUBSET = 1;
+  Pk.Interval.prototype.DISJOINT = 2;
+  Pk.Interval.prototype.INTERSECT_OR_SUPERSET = 3;
+  Pk.Interval.prototype.clip = null;
   
-  WW.Interval.prototype.compareTo = function(other) {
+  Pk.Interval.prototype.compareTo = function(other) {
     if (other.from > this.to || other.to < this.from) return this.DISJOINT;
     if (other.from <= this.from && other.to >= this.to) return this.SUBSET; 
     return this.INTERSECT_OR_SUPERSET;
   }
   
   // endpoints of intervals included
-  WW.Interval.prototype.disjointIncl = function(other) {
+  Pk.Interval.prototype.disjointIncl = function(other) {
     if (other.from > this.to || other.to < this.from) return this.DISJOINT;
   }
   
   // two intervals that share only endpoints are seen as disjoint
-  WW.Interval.prototype.disjointExcl = function(other) {
+  Pk.Interval.prototype.disjointExcl = function(other) {
     if (other.from >= this.to || other.to <= this.from) return this.DISJOINT;
   }
 
 
-WW.IntervalTree = function() {
+Pk.IntervalTree = function() {
   
   var root = null;
   
@@ -49,7 +49,7 @@ WW.IntervalTree = function() {
   var Node = function(from, to) {
     this.left = null;
     this.right = null;
-    this.segment = new WW.Interval(from, to);
+    this.segment = new Pk.Interval(from, to);
     this.intervals = [];
   }
   
@@ -99,16 +99,16 @@ WW.IntervalTree = function() {
   
   var insertInterval = function(node, interval) {
     switch(node.segment.compareTo(interval)) {
-      case WW.Interval.const.SUBSET:
+      case Pk.Interval.const.SUBSET:
         // interval of node is a subset of the specified interval or equal
         node.intervals.push(interval);
         break;
-      case WW.Interval.const.INTERSECT_OR_SUPERSET:
+      case Pk.Interval.const.INTERSECT_OR_SUPERSET:
         // interval of node is a superset, have to look in both childs
         if (node.left) insertInterval(node.left, interval);
         if (node.right) insertInterval(node.right, interval);
         break;
-      case WW.Interval.const.DISJOINT:
+      case Pk.Interval.const.DISJOINT:
         // nothing to do
         break;
     }
@@ -139,7 +139,7 @@ WW.IntervalTree = function() {
   var _query = function(node, queryIntervals, hits, disjointFn) {
     if (node === null) return;
     queryIntervals.forEach(function(queryInterval) {
-      if (disjointFn.call(node.segment, queryInterval) !== WW.Interval.const.DISJOINT) {
+      if (disjointFn.call(node.segment, queryInterval) !== Pk.Interval.const.DISJOINT) {
         node.intervals.forEach(function(interval) {
           hits[interval.id] = interval;
         });
@@ -151,7 +151,7 @@ WW.IntervalTree = function() {
   
   var _queryInterval = function(intervalArray, resultFn, disjointFn) {
     var hits = {};
-    if (disjointFn === undefined) disjointFn = WW.Interval.prototype.disjointIncl;
+    if (disjointFn === undefined) disjointFn = Pk.Interval.prototype.disjointIncl;
     _query(root, intervalArray, hits, disjointFn);
     var intervalArray = Object.keys(hits).map(function(key) {
       return hits[key];
@@ -246,12 +246,12 @@ WW.IntervalTree = function() {
       var val = (validate !== undefined) ? validate : true;
       if (val) validateIntervalArray(from, to);
       for(var i = 0; i < from.length; i++) {
-        intervals.push(new WW.Interval(from[i], to[i]));
+        intervals.push(new Pk.Interval(from[i], to[i]));
       }
     },
     clearIntervalStack: function() {
       intervals.length = 0;
-      WW.Interval.prototype.id = 0;
+      Pk.Interval.prototype.id = 0;
     },
     buildTree: function() {
       if (intervals.length === 0) throw { name: 'BuildTreeError', message: 'interval stack is empty' };
@@ -274,7 +274,7 @@ WW.IntervalTree = function() {
         item.forEach(function(item, pos) {
           console.log('Segment %d: (%d,%d)', pos, item.segment.from, item.segment.to);
           item.intervals.forEach(function(item, pos) {
-            console.log('  WW.Interval %d: (%d,%d)', pos, item.from, item.to);
+            console.log('  Pk.Interval %d: (%d,%d)', pos, item.from, item.to);
           });
         });
       });
@@ -287,7 +287,7 @@ WW.IntervalTree = function() {
       var val = (validate !== undefined) ? validate : true;
       if (val) validatePointArray(points);
       var intervalArray = points.map(function(item) {
-        return new WW.Interval(item, item);
+        return new Pk.Interval(item, item);
       });
       return _queryInterval(intervalArray, resultFn);
     },
@@ -301,10 +301,10 @@ WW.IntervalTree = function() {
       var intervalArray = [];
       var val = (options !== undefined && options.validate !== undefined) ? options.validate : true;
       var resFn = (options !== undefined && options.resultFn !== undefined) ? options.resultFn : undefined;
-      var disjointFn = (options !== undefined && options.endpoints === false) ? WW.Interval.prototype.disjointExcl : WW.Interval.prototype.disjointIncl;
+      var disjointFn = (options !== undefined && options.endpoints === false) ? Pk.Interval.prototype.disjointExcl : Pk.Interval.prototype.disjointIncl;
       if (val) validateIntervalArray(from, to);
       for(var i = 0; i < from.length; i++) {
-        intervalArray.push(new WW.Interval(from[i], to[i]));
+        intervalArray.push(new Pk.Interval(from[i], to[i]));
       }
       return _queryInterval(intervalArray, resFn, disjointFn);
     },
@@ -312,7 +312,7 @@ WW.IntervalTree = function() {
       _queryOverlap(root, []);
       var result = [];
       intervals.forEach(function(interval) {
-        var copy = new WW.Interval();
+        var copy = new Pk.Interval();
         copy.id = interval.id;
         copy.from = interval.from;
         copy.to = interval.to

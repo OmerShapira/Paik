@@ -1,22 +1,22 @@
 //Base Class for loadable resources
 
-WW.Resource = function(){
+Pk.Resource = function(){
 	
 }
 
-WW.Resource.prototype.Load = function(){
+Pk.Resource.prototype.Load = function(){
 	console.error("NOT IMPLEMENTED");
 };
 
-WW.Resource.prototype.Dispose = function(){
+Pk.Resource.prototype.Dispose = function(){
 	console.error("NOT IMPLEMENTED");
 };
 
-WW.Resource.prototype.Begin = function(){
+Pk.Resource.prototype.Begin = function(){
 	console.error("NOT IMPLEMENTED");
 };
 
-WW.Resource.prototype.End = function(){
+Pk.Resource.prototype.End = function(){
 	console.error("NOT IMPLEMENTED");
 };
 

@@ -1,24 +1,29 @@
 "use strict";
-WW.Player = (
+
+/* 
+ * Player Singleton
+ */
+Pk.Player = (
 	function(){
-		
-		//Singleton pattern! Object is instantiated.
 		var requestID;
 		var playing = false;
 		var lastCall = 0;
 		var subscribers = [];
-		function doRequest(){
-			requestID = window.requestAnimationFrame(animationRequest);
+		function RequestLoop(){
+			requestID = window.requestAnimationFrame(ProgramMainLoop);
 		}
 
-		function animationRequest(hiresTimestamp){
-			// var loadtime = Date.now() - hiresTimestamp;
-			doRequest(); //This is a loop
+		/*
+		 * Main Loop for running the timing functions
+		 */
+		function ProgramMainLoop(hiresTimestamp){
+			RequestLoop(); 
+			//TODO (OS): Check timing between begin and end, to see if preloading can be done
+			
 			Tick(hiresTimestamp);
 			Draw();
 
-			// console.log ("Timing : " + hiresTimestamp - lastCall);
-			// console.log (hiresTimestamp - Date.now() + loadtime);
+			
 			lastCall = hiresTimestamp;
 		}
 
@@ -29,14 +34,14 @@ WW.Player = (
 			}
 
 		function Draw(){
-			WW.Timeline.GetDrawables
 			//TODO: Implement
+			// Pk.Timeline.GetDrawables
 		}
 
 		return {
 			Start: function(){
 				if (playing !== true){
-					doRequest();
+					RequestLoop();
 					playing = true;
 				}
 			},
@@ -49,9 +54,6 @@ WW.Player = (
 			Subscribe: function(thing){
 				subscribers.push(thing);
 			},
-
-			Tick: Tick,
-			Draw: Draw
 		}
 	})();
 
