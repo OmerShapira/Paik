@@ -5,14 +5,56 @@ Pk.Timeline = (function(){
 	var AllClips = [];
 	var isBuilt = false;
 	var playMode = true;
-	//TODO: Use these
-	var ClipsInCurrentFrame = [];
-	var ClipsInLookahead = [];
-	var ClipsForRemoval = [];
+	
+	var IntervalsInCurrentFrame = {};
+	
+	//TODO (OS): Create lookahead
 
 	var HandleClipsInRange = function(interval_list){
-		//TODO (OS): 
-	}
+		/* 
+		 * In set language:
+		 * for insertion  = in \ current
+		 * for removal = current \ in
+		 * but js doesn't have set algebra,
+		 * so we use IDs instead.
+		 */
+		var ClipsForRemoval = [];	
+		//Find set difference and set excluded cilps for removal
+		Object.keys(IntervalsInCurrentFrame).forEach(
+			function(key){
+				if (!Pk.Util.Exists(interval_list[key])){
+					//Doesn't exist? mark for deletion
+					var removed = IntervalsInCurrentFrame[key];
+					delete IntervalsInCurrentFrame[key];
+					ClipsForRemoval.push(removed.clip);
+				} else {
+					//Does exist? Keep it playing
+					delete interval_list[key];
+				}	
+			});
+
+		//First, clean up.
+		HandleRemovedClips(ClipsForRemoval);
+
+		// The keys that weren't plucked from interval_list are new. Insert them into the scene.
+		HandleNewClips(Object.keys(interval_list).map(
+			function(key){ return interval_list[key].clip; })
+		);
+
+		//Finally, add the new clips to the "currently playing" set.
+		Object.keys(interval_list).forEach(
+			function(key){ IntervalsInCurrentFrame[key] = interval_list[key]; }
+			);
+	};
+
+	var HandleNewClips = function(clips){
+		// TODO: Implement
+		clips.forEach(function(clip){console.log("adding: " + clip.interval.id);})
+	};
+	var HandleRemovedClips = function(clips){
+		// TODO: Implement
+		clips.forEach(function(clip){console.log("removing: " + clip.interval.id);})
+	};
 
 	return {
 
@@ -22,19 +64,15 @@ Pk.Timeline = (function(){
 		},
 		
 		SetTimecode : function(time, sweep){
-			if (typeof(sweep) === 'undefined'){
+			if (!Pk.Util.Exists(sweep)){
 				sweep = true;
 			}
 			if (sweep){
 				//TODO: Maybe play next frame, not current?
-				//TODO: Create list of differences for removing clips from teh list
-				var clipsInRange = [];
 				var opts = {
-					resultFn : function(x) {clipsInRange = x}.bind(this)
+					resultFn : HandleClipsInRange.bind(this)
 				};
 				IntervalQuery.queryInterval(current_time, time, opts);
-				if (clipsInRange.length > 0) {console.log(clipsInRange);}
-				
 	 		}
 			current_time = time;
 		},
