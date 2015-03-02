@@ -57,4 +57,9 @@ Pk.Player.ConnectMixin({
 	Remove  : function(x){scene.remove(x)},
 	Draw 	: function(x){renderer.render(scene, camera);},
 });
+
+var video = Pk.Video.FromUrl("video/video.mp4");
+Pk.Timeline.BindTimecodeController(video.GetTimecodeController());
+video.StartPlaying();
+Pk.Player.Start();
 ```
