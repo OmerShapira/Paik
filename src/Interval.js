@@ -4,6 +4,7 @@
  * Copyright © 2012, Thomas Oberndörfer <toberndo@yarkon.de>
  * MIT Licensed
  * https://github.com/toberndo/interval-query
+ *
  * Modified for Paik by Omer Shapira, 2015
 */
 
@@ -17,26 +18,37 @@ Pk.Interval = function(from, to) {
   }
   
   Pk.Interval.prototype.id = 0;
+  
   Pk.Interval.const = Pk.Interval.prototype;
+  
   Pk.Interval.prototype.SUBSET = 1;
+  
   Pk.Interval.prototype.DISJOINT = 2;
+  
   Pk.Interval.prototype.INTERSECT_OR_SUPERSET = 3;
+  
   Pk.Interval.prototype.clip = null;
   
   Pk.Interval.prototype.compareTo = function(other) {
+
     if (other.from > this.to || other.to < this.from) return this.DISJOINT;
     if (other.from <= this.from && other.to >= this.to) return this.SUBSET; 
     return this.INTERSECT_OR_SUPERSET;
+
   }
   
   // endpoints of intervals included
   Pk.Interval.prototype.disjointIncl = function(other) {
+
     if (other.from > this.to || other.to < this.from) return this.DISJOINT;
+
   }
   
   // two intervals that share only endpoints are seen as disjoint
   Pk.Interval.prototype.disjointExcl = function(other) {
+
     if (other.from >= this.to || other.to <= this.from) return this.DISJOINT;
+
   }
 
 
@@ -47,40 +59,54 @@ Pk.IntervalTree = function() {
   var intervals = [];
   
   var Node = function(from, to) {
+
     this.left = null;
     this.right = null;
     this.segment = new Pk.Interval(from, to);
     this.intervals = [];
+
   }
   
   var endpointArray = function() {
+
     var endpoints = [];
     endpoints.push(-Infinity);
     endpoints.push(Infinity);
     intervals.forEach(function(item) {
+
       endpoints.push(item.from);
       endpoints.push(item.to);
+
     });
+
     return sortAndDeDup(endpoints, function(a, b) {
       return (a - b);
     });
+
   }
   
   var sortAndDeDup = function(unordered, compFn) {
+
     var result = [];
     var prev;
-    unordered.sort(compFn).forEach(function(item) {
+
+    unordered.sort(compFn).forEach(
+      function(item) {
       var equal = (compFn !== undefined && prev !== undefined) ? compFn(prev, item) === 0 : prev === item; 
       if (!equal) {
         result.push(item);
         prev = item;
       }
     });
+
     return result;
+
   }
   
   var insertElements = function(pointArray) {
+
     var node;
+
     if (pointArray.length === 2) {
       node = new Node(pointArray[0], pointArray[1]);
       if (pointArray[1] !== Infinity) {
@@ -95,9 +121,11 @@ Pk.IntervalTree = function() {
       node.right = insertElements(pointArray.slice(center));
     }
     return node;
+
   }
   
   var insertInterval = function(node, interval) {
+
     switch(node.segment.compareTo(interval)) {
       case Pk.Interval.const.SUBSET:
         // interval of node is a subset of the specified interval or equal
@@ -112,9 +140,11 @@ Pk.IntervalTree = function() {
         // nothing to do
         break;
     }
+
   }
   
   var traverseTree = function(node, enterFn, leaveFn) {
+
     if (node === null) return;
     // callback when enter node
     if (enterFn !== undefined) enterFn(node);
@@ -122,9 +152,11 @@ Pk.IntervalTree = function() {
     traverseTree(node.left, enterFn, leaveFn);
     // callback before leave
     if (leaveFn !== undefined) leaveFn(node);
+
   }
   
   var tree2Array = function(node, level, array) {
+
     if (node === null) return;
     if (level === undefined) level = -1;
     if (array === undefined) array = [];
@@ -134,9 +166,11 @@ Pk.IntervalTree = function() {
     tree2Array(node.right, level, array);
     tree2Array(node.left, level, array);
     return array;
+
   }
   
   var _query = function(node, queryIntervals, hits, disjointFn) {
+
     if (node === null) return;
     queryIntervals.forEach(function(queryInterval) {
       if (disjointFn.call(node.segment, queryInterval) !== Pk.Interval.const.DISJOINT) {
@@ -147,8 +181,11 @@ Pk.IntervalTree = function() {
         _query(node.left, queryIntervals, hits, disjointFn);
       }
     });
+
   }
+
   var _queryInterval = function(intervalArray, resultFn, disjointFn) {
+
     var hits = {};
     if (disjointFn === undefined) disjointFn = Pk.Interval.prototype.disjointIncl;
     _query(root, intervalArray, hits, disjointFn);
@@ -157,10 +194,12 @@ Pk.IntervalTree = function() {
     });
     if (resultFn !== undefined && typeof resultFn === 'function') resultFn(hits);
     return intervalArray.length;
+
   }
   
   
   var _exchangeOverlap = function(intervals, superiorIntervals) {
+
     for(var i = 0; i < superiorIntervals.length; i++) {
       var superiorInterval = superiorIntervals[i];
       for(var j = 0; j < intervals.length; j++) {
@@ -175,12 +214,15 @@ Pk.IntervalTree = function() {
         intervals[j].overlap[intervals[i].id] = intervals[i]; 
       }
     }
+
   }
   
   var _queryOverlap = function(node, topOverlap) {
+
     if (node === null) return;
     var localTopOvrlp;
     // exchange overlaps: all intervals of a node overlap with intervals of superior nodes and vice versa
+
     if (node.intervals.length !== 0) {
       _exchangeOverlap(node.intervals, topOverlap);
       // create topOverlap array with new intervals from node
@@ -188,87 +230,118 @@ Pk.IntervalTree = function() {
     } else {
       localTopOvrlp = topOverlap;
     }
+
     _queryOverlap(node.left, localTopOvrlp); 
     _queryOverlap(node.right, localTopOvrlp); 
+
   }
   
-    var validateInterval = function(from, to) {
+  var validateInterval = function(from, to) {
+
     if (typeof from !== 'number' || typeof to !== 'number') throw {
         name: 'InvalidInterval',
         message: 'endpoints of interval must be of type number'
     };
+
     if (from > to) throw {
         name: 'InvalidInterval',
         message: '(' + from + ',' + to + ')' + ' a > b'
     };
+
   }
   
   var validateIntervalArray = function(from, to) {
+
     if (!(from instanceof Array && to instanceof Array)) throw {
         name: 'InvalidParameter',
         message: 'function pushArray: parameters must be arrays'
     };
+
     if (from.length !== to.length) throw {
         name: 'InvalidParameter',
         message: 'function pushArray: arrays must have same length'
     };
+
     for(var i = 0; i < from.length; i++) {
       validateInterval(from[i], to[i]);
     }
+
   }
   
   var validatePoint = function(point) {
+
     if (typeof point !== 'number') throw {
         name: 'InvalidParameter',
         message: 'parameter must be a number'
     };
+
   }
   
   var validatePointArray = function(points) {
+
     if (!(points instanceof Array)) throw {
         name: 'InvalidParameter',
         message: 'parameter must be an array'
     };
+
     for(var i = 0; i < points.length; i++) {
       if (typeof points[i] !== 'number') throw {
         name: 'InvalidParameter',
         message: 'array must consist only of numbers'
       }
     }
+
   }
   
   return {
+
     pushInterval: function(ivl) {
+
       validateInterval(ivl.from, ivl.to);
       intervals.push(ivl);
+
     },
+
     pushArray: function(from, to, validate) {
+
       var val = (validate !== undefined) ? validate : true;
       if (val) validateIntervalArray(from, to);
       for(var i = 0; i < from.length; i++) {
         intervals.push(new Pk.Interval(from[i], to[i]));
       }
+
     },
+
     clearIntervalStack: function() {
+
       intervals.length = 0;
       Pk.Interval.prototype.id = 0;
+
     },
+
     buildTree: function() {
+
       if (intervals.length === 0) throw { name: 'BuildTreeError', message: 'interval stack is empty' };
       root = insertElements(endpointArray());
       intervals.forEach(function(item) {
         insertInterval(root, item);
       });
+
     },
+
     printTree: function() {
+
       traverseTree(root, function(node) {
         console.log('\nSegment: (%d,%d)', node.segment.from, node.segment.to);
         node.intervals.forEach(function(item, pos) {
           console.log('Interval %d: (%d,%d)', pos, item.from, item.to);
         });
       });
+
     },
+
     printTreeTopDown: function() {
+
       tree2Array(root).forEach(function(item, pos) {
         console.log('Level %d:', pos);
         item.forEach(function(item, pos) {
@@ -278,48 +351,70 @@ Pk.IntervalTree = function() {
           });
         });
       });
+
     },
+
     queryPoint: function(point, resultFn) {
+
       validatePoint(point);
       return this.queryPointArray([point], resultFn);
+
     },
+
     queryPointArray: function(points, resultFn, validate) {
+
       var val = (validate !== undefined) ? validate : true;
       if (val) validatePointArray(points);
       var intervalArray = points.map(function(item) {
         return new Pk.Interval(item, item);
       });
       return _queryInterval(intervalArray, resultFn);
+
     },
+
     // options: endpoints, resultFn
     queryInterval: function(from, to, options) {
+
       validateInterval(from, to);
       return this.queryIntervalArray([from], [to], options);
+
     },
+
     // options: endpoints, resultFn, validate
     queryIntervalArray: function(from, to, options) {
+
       var intervalArray = [];
       var val = (options !== undefined && options.validate !== undefined) ? options.validate : true;
       var resFn = (options !== undefined && options.resultFn !== undefined) ? options.resultFn : undefined;
       var disjointFn = (options !== undefined && options.endpoints === false) ? Pk.Interval.prototype.disjointExcl : Pk.Interval.prototype.disjointIncl;
       if (val) validateIntervalArray(from, to);
+
       for(var i = 0; i < from.length; i++) {
         intervalArray.push(new Pk.Interval(from[i], to[i]));
       }
+
       return _queryInterval(intervalArray, resFn, disjointFn);
+
     },
+
     queryOverlap: function() {
+
       _queryOverlap(root, []);
       var result = [];
+
       intervals.forEach(function(interval) {
+
         var copy = new Pk.Interval();
         copy.id = interval.id;
         copy.from = interval.from;
         copy.to = interval.to
         copy.overlap = Object.keys(interval.overlap);
         result.push(copy);
+
       });
+
       return result;
+
     }
   }
 }

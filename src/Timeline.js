@@ -23,7 +23,7 @@ Pk.Timeline = ( function( ){
 		Object.keys( IntervalsInCurrentFrame ).forEach(
 
 			function( key ){
-				if ( !Pk.Util.Exists( interval_list[ key ] ) ){
+				if ( ! Pk.Util.Exists( interval_list[ key ] ) ){
 					//Doesn't exist? mark for deletion
 					var removed = IntervalsInCurrentFrame[ key ];
 					delete IntervalsInCurrentFrame[ key ];
@@ -56,11 +56,8 @@ Pk.Timeline = ( function( ){
 
 	var HandleNewClips = function( clips ){
 
-		// TODO: Implement
 		clips.forEach( function( clip ){
-			console.log( "adding: " + clip.interval.id );
 			clip.resources.forEach( 
-				//Avoiding 'this' hell
 				function( x ){Pk.ActiveMixin.Add( x );}
 				); } 
 			);
@@ -69,24 +66,14 @@ Pk.Timeline = ( function( ){
 
 	var HandleRemovedClips = function( clips ){
 
-		// TODO: Implement
 		clips.forEach( function( clip ){
-			console.log( "removing: " + clip.interval.id );
 			clip.resources.forEach( 
-				//Avoiding 'this' hell
 				function( x ){Pk.ActiveMixin.Remove( x );}
 				); } 
 			);
 	};
 
 	return {
-
-		BindTimecodeController : function( controller ){
-
-			//FIXME:This way one can subscribe to multiple controllers
-			controller.Subscribe( this.SetTimecode.bind( this ) );
-
-		},
 		
 		SetTimecode : function( time, sweep ){
 
@@ -103,7 +90,7 @@ Pk.Timeline = ( function( ){
 			}
 
 			Pk.ActiveMixin.Tick( time );
-			Pk.ActiveMixin.Draw(  );
+			Pk.ActiveMixin.Draw( );
 
 			current_time = time;
 

@@ -73,11 +73,11 @@ Pk.Video.prototype = {
 
 	},
 
-	Tick : function(  ) {
+	Tick : function( ) {
 
 		if ( videoElement.readyState === videoElement.HAVE_ENOUGH_DATA  ) {
 			this.context.drawImage( videoElement, 0, 0  );
-			if ( this.texture  ){
+			if ( this.texture ){
 				this.texture.needsUpdate = true;
 			}
 		}
@@ -90,7 +90,7 @@ Pk.Video.prototype = {
 
 		var c = new Pk.TimecodeController( this.Time );
 		return c;
-		
+
 	}
 };
 

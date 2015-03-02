@@ -9,7 +9,6 @@ Pk.Player = (
 		var requestID;
 		var playing = false;
 		var lastCall = 0;
-		var subscribers = [ ];
 
 		function RequestLoop( ){ 
 
@@ -25,17 +24,16 @@ Pk.Player = (
 			RequestLoop( ); 
 			//TODO ( OS ): Check timing between begin and end, to see if preloading can be done
 			
-			Tick( hiresTimestamp );
+			Update( hiresTimestamp );
 
 			lastCall = hiresTimestamp;
 
 		}
 
-		function Tick( time ){ 
+		// Only updates the current timecode track.
+		function Update( time ){ 
 
-			subscribers.forEach( 
-					function( f ){ f( time ); }
-				 );
+			Pk.TimecodeTrack.Update( time );
 
 			}
 
@@ -65,19 +63,21 @@ Pk.Player = (
 
 				},
 
-			Subscribe: function( thing ){ 
-
-				subscribers.push( thing );
-
-			},
-
 			ConnectMixin : function( mixin_options ){ 
 
 				if( Pk.Util.Exists( mixin_options ) ){ 
 					Pk.ActiveMixin = new Pk.Mixin( mixin_options );
 				}
 				
+			},
+
+			SetTimecodeTrack : function( tc_controller ) {
+
+				//TODO (OS): Check if this is a TimecodeController
+				Pk.TimecodeTrack = tc_controller;
+
 			}
+
 		}
 	} )( );
 
