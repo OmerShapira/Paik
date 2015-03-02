@@ -13,14 +13,19 @@ Paik is a library for synchronising time-based events to a single video.
  ```javascript
  
  Pk.Timeline.Add(
+ 	//new Pk.Clip(from_timecode, to_timecode, [assets...], tickfunction)
 	new Pk.Clip(0, 1500, clipassets_0, tickfunction_0),
 	// ...
 	new Pk.Clip(5000, 5200, clipassets_n, tickfunction_n)
 	);
+//Locks the timeline(may be removed in later versions)
 Pk.Timeline.Build();
 
+//The video object wraps a playable video
 var Video = Pk.Video.FromUrl("video/video.mp4");
+//The timecode track sends events to the player whenever the video timecode changes
 Pk.Timeline.BindTimecodeController(video.GetTimecodeController());
+
 Pk.Player.Start();
 Video.StartPlaying();
  ```
