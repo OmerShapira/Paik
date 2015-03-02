@@ -159,30 +159,6 @@ Pk.IntervalTree = function() {
     return intervalArray.length;
   }
   
-
-  //Set-based approach
-  // var _query = function(node, queryIntervals, hits, disjointFn) {
-  //   if (node === null) return;
-  //   queryIntervals.forEach(function(queryInterval) {
-  //     if (disjointFn.call(node.segment, queryInterval) !== Pk.Interval.const.DISJOINT) {
-  //       node.intervals.forEach(function(interval) {
-  //         hits.add(interval);
-  //       });
-  //       _query(node.right, queryIntervals, hits, disjointFn);
-  //       _query(node.left, queryIntervals, hits, disjointFn);
-  //     }
-  //   });
-  // }
-  
-  // var _queryInterval = function(intervalArray, resultFn, disjointFn) {
-  //   var hits = new Set();
-  //   if (disjointFn === undefined) disjointFn = Pk.Interval.prototype.disjointIncl;
-  //   _query(root, intervalArray, hits, disjointFn);
-  //   ///TODO: Clean
-  //   var intervalArray = hits;
-  //   if (resultFn !== undefined && typeof resultFn === 'function') resultFn(intervalArray);
-  //   return intervalArray.size;
-  // }  
   
   var _exchangeOverlap = function(intervals, superiorIntervals) {
     for(var i = 0; i < superiorIntervals.length; i++) {

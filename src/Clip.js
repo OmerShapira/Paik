@@ -1,30 +1,40 @@
 "use strict";
-Pk.Clip = function (from, to, resources, playFunction){
-	this.interval 		= new Pk.Interval(from,to);
+Pk.Clip = function ( from, to, resources, playFunction ){ 
+
+	this.interval 		= new Pk.Interval( from,to );
 	this.interval.clip 	= this;
 	this.resources 		= resources;
 	this.playFunction 	= playFunction;
+
 };
 
-Pk.Clip.prototype = {
+Pk.Clip.prototype = { 
 	
-	Load : function(){
-		resources.forEach(function(x){x.Load();});
+	Load : function( ){ 
+
+		resources.forEach( function( x ){ x.Load( ); } );
+
 	},
 
-	Dispose : function(){
-		resources.forEach(function(x){x.Dispose();});	
+	Dispose : function( ){ 
+
+		resources.forEach( function( x ){ x.Dispose( ); } );	
+
 	},
 
-	Play : function(tickService){
-		resources.forEach(function(x){x.Begin();});	
+	Play : function( tickService ){ 
+
+		resources.forEach( function( x ){ x.Begin( ); } );	
 		//TODO: Require parent
-		tickService.Register(this.playFunction);
+		tickService.Register( this.playFunction );
+
 	},
 
-	Stop : function(tickService){
-		resources.forEach(function(x){x.End();});	
+	Stop : function( tickService ){ 
+
+		resources.forEach( function( x ){ x.End( ); } );	
 		//TODO: Require parent
-		tickService.Unregister(this.playFunction);
+		tickService.Unregister( this.playFunction );
+		
 	}
 };

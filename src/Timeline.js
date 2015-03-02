@@ -1,96 +1,112 @@
-Pk.Timeline = (function(){
+Pk.Timeline = ( function( ){
 	
 	var current_time = 0;
 	var IntervalQuery =  null;
-	var AllClips = [];
+	var AllClips = [ ];
 	var isBuilt = false;
 	var playMode = true;
 	
 	var IntervalsInCurrentFrame = {};
 	
-	//TODO (OS): Create lookahead
+	//TODO ( OS ): Create lookahead
 
-	var HandleClipsInRange = function(interval_list){
+	var HandleClipsInRange = function( interval_list ){
+
 		/* 
-		 * In set language:
-		 * objects for insertion  = in \ current
-		 * objects for removal = current \ in
-		 * but js doesn't have set algebra, so we use IDs instead.
-		 */
-		var ClipsForRemoval = [];	
+		* In set language:
+		* objects for insertion  = in \ current
+		* objects for removal = current \ in
+		* but js doesn't have set algebra, so we use IDs instead.
+		*/
+		var ClipsForRemoval = [ ];	
 		//Find set difference and set excluded cilps for removal
-		Object.keys(IntervalsInCurrentFrame).forEach(
-			function(key){
-				if (!Pk.Util.Exists(interval_list[key])){
+		Object.keys( IntervalsInCurrentFrame ).forEach(
+
+			function( key ){
+				if ( !Pk.Util.Exists( interval_list[ key ] ) ){
 					//Doesn't exist? mark for deletion
-					var removed = IntervalsInCurrentFrame[key];
-					delete IntervalsInCurrentFrame[key];
-					ClipsForRemoval.push(removed.clip);
+					var removed = IntervalsInCurrentFrame[ key ];
+					delete IntervalsInCurrentFrame[ key ];
+					ClipsForRemoval.push( removed.clip );
 				} else {
 					//Does exist? Keep it playing
-					delete interval_list[key];
-				}	
-			});
+					delete interval_list[ key ];
+				}	} 
+
+			);
 
 		//First, clean up.
-		HandleRemovedClips(ClipsForRemoval);
+		HandleRemovedClips( ClipsForRemoval );
 
 		// The keys that weren't plucked from interval_list are new. Insert them into the scene.
-		HandleNewClips(Object.keys(interval_list).map(
-			function(key){ return interval_list[key].clip; })
-		);
+		HandleNewClips( Object.keys( interval_list ).map( 
+
+			function( key ){ return interval_list[ key ].clip; } )
+
+			);
 
 		//Finally, add the new clips to the "currently playing" set.
-		Object.keys(interval_list).forEach(
-			function(key){ IntervalsInCurrentFrame[key] = interval_list[key]; }
+		Object.keys( interval_list ).forEach( 
+
+			function( key ){ IntervalsInCurrentFrame[ key ] = interval_list[ key ]; }
+
 			);
+
 	};
 
-	var HandleNewClips = function(clips){
+	var HandleNewClips = function( clips ){
+
 		// TODO: Implement
-		clips.forEach(function(clip){
-			console.log("adding: " + clip.interval.id);
-			clip.resources.forEach(
+		clips.forEach( function( clip ){
+			console.log( "adding: " + clip.interval.id );
+			clip.resources.forEach( 
 				//Avoiding 'this' hell
-				function(x){Pk.ActiveMixin.Add(x);}
-				);
-		})
+				function( x ){Pk.ActiveMixin.Add( x );}
+				); } 
+			);
+
 	};
-	var HandleRemovedClips = function(clips){
+
+	var HandleRemovedClips = function( clips ){
+
 		// TODO: Implement
-		clips.forEach(function(clip){
-			console.log("removing: " + clip.interval.id);
-			clip.resources.forEach(
+		clips.forEach( function( clip ){
+			console.log( "removing: " + clip.interval.id );
+			clip.resources.forEach( 
 				//Avoiding 'this' hell
-				function(x){Pk.ActiveMixin.Remove(x);}
-				);
-		})
+				function( x ){Pk.ActiveMixin.Remove( x );}
+				); } 
+			);
 	};
 
 	return {
 
-		BindTimecodeController : function(controller){
+		BindTimecodeController : function( controller ){
+
 			//FIXME:This way one can subscribe to multiple controllers
-			controller.Subscribe(this.SetTimecode.bind(this));
+			controller.Subscribe( this.SetTimecode.bind( this ) );
+
 		},
 		
-		SetTimecode : function(time, sweep){
-			if (!Pk.Util.Exists(sweep)){
+		SetTimecode : function( time, sweep ){
+
+			if ( !Pk.Util.Exists( sweep ) ){
 				sweep = true;
 			}
-			if (sweep){
+
+			if ( sweep ){
 				//TODO: Maybe play next frame, not current?
 				var opts = {
-					resultFn : HandleClipsInRange.bind(this)
+					resultFn : HandleClipsInRange.bind( this )
 				};
-				IntervalQuery.queryInterval(current_time, time, opts);
-	 		}
-			
+				IntervalQuery.queryInterval( current_time, time, opts );
+			}
 
-			Pk.ActiveMixin.Tick(time);
-			Pk.ActiveMixin.Draw();
+			Pk.ActiveMixin.Tick( time );
+			Pk.ActiveMixin.Draw(  );
 
 			current_time = time;
+
 		},
 
 
@@ -101,42 +117,51 @@ Pk.Timeline = (function(){
 		 * interval query, like in here:
 		 * https://github.com/toberndo/interval-query
 		 */
-		Build : function(){
-			IntervalQuery = new Pk.IntervalTree();
-			AllClips.forEach(
-				function(clip){
-					IntervalQuery.pushInterval(clip.interval);
-				});
-			IntervalQuery.buildTree();
+		Build : function( ){
+
+			IntervalQuery = new Pk.IntervalTree( );
+			AllClips.forEach( 
+
+				function( clip ){
+					IntervalQuery.pushInterval( clip.interval );
+				} 
+
+				);
+			IntervalQuery.buildTree( );
 			isBuilt = true;
+
 		},
 
 		/*
-	     * Adds any number of clips to the timeline
-	     */
-		Add : function(){
-			if (isBuilt === true){ 
-				console.warn("Trying to add clips to a built timeline");
-				return;
-			}
-			for (var i = arguments.length - 1; i >= 0; i--) {
-				AllClips.push(arguments[i]);
-			};
-		},
+	    * Adds any number of clips to the timeline
+	    */
+	    Add : function( ){
+
+	    	if ( isBuilt === true ){ 
+	    		console.warn( "Trying to add clips to a built timeline" );
+	    		return;
+	    	}
+	    	for ( var i = arguments.length - 1; i >= 0; i-- ) {
+	    		AllClips.push( arguments[ i ] );
+	    	};
+
+	    },
 
 
-		SetPlayMode : function(status) {
-			if (!Pk.Util.IsBool(status)){
-				return;
-			} else {
-				playMode = status;
-			}
-		}
+	    SetPlayMode : function( status ) {
+
+	    	if ( !Pk.Util.IsBool( status ) ){
+	    		return;
+	    	} else {
+	    		playMode = status;
+	    	}
+
+	    },
 
 	}
-	
 
-})();
+
+	} )(  );
 
 
 
