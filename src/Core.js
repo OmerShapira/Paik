@@ -21,9 +21,7 @@ Pk.Player = (
 			//TODO (OS): Check timing between begin and end, to see if preloading can be done
 			
 			Tick(hiresTimestamp);
-			Draw();
 
-			
 			lastCall = hiresTimestamp;
 		}
 
@@ -34,8 +32,7 @@ Pk.Player = (
 			}
 
 		function Draw(){
-			//TODO: Implement
-			// Pk.Timeline.GetDrawables
+			Pk.ActiveMixin.Draw();
 		}
 
 		return {
@@ -54,6 +51,12 @@ Pk.Player = (
 			Subscribe: function(thing){
 				subscribers.push(thing);
 			},
+
+			ConnectMixin : function(mixin_options){
+				if(Pk.Util.Exists(mixin_options)){
+					Pk.ActiveMixin = new Pk.Mixin(mixin_options);
+				}
+			}
 		}
 	})();
 

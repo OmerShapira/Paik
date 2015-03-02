@@ -11,12 +11,3 @@ Pk.Resource.prototype.Load = function(){
 Pk.Resource.prototype.Dispose = function(){
 	console.error("NOT IMPLEMENTED");
 };
-
-Pk.Resource.prototype.Begin = function(){
-	console.error("NOT IMPLEMENTED");
-};
-
-Pk.Resource.prototype.End = function(){
-	console.error("NOT IMPLEMENTED");
-};
-

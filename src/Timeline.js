@@ -13,10 +13,9 @@ Pk.Timeline = (function(){
 	var HandleClipsInRange = function(interval_list){
 		/* 
 		 * In set language:
-		 * for insertion  = in \ current
-		 * for removal = current \ in
-		 * but js doesn't have set algebra,
-		 * so we use IDs instead.
+		 * objects for insertion  = in \ current
+		 * objects for removal = current \ in
+		 * but js doesn't have set algebra, so we use IDs instead.
 		 */
 		var ClipsForRemoval = [];	
 		//Find set difference and set excluded cilps for removal
@@ -49,11 +48,23 @@ Pk.Timeline = (function(){
 
 	var HandleNewClips = function(clips){
 		// TODO: Implement
-		clips.forEach(function(clip){console.log("adding: " + clip.interval.id);})
+		clips.forEach(function(clip){
+			console.log("adding: " + clip.interval.id);
+			clip.resources.forEach(
+				//Avoiding 'this' hell
+				function(x){Pk.ActiveMixin.Add(x);}
+				);
+		})
 	};
 	var HandleRemovedClips = function(clips){
 		// TODO: Implement
-		clips.forEach(function(clip){console.log("removing: " + clip.interval.id);})
+		clips.forEach(function(clip){
+			console.log("removing: " + clip.interval.id);
+			clip.resources.forEach(
+				//Avoiding 'this' hell
+				function(x){Pk.ActiveMixin.Remove(x);}
+				);
+		})
 	};
 
 	return {
@@ -74,6 +85,11 @@ Pk.Timeline = (function(){
 				};
 				IntervalQuery.queryInterval(current_time, time, opts);
 	 		}
+			
+
+			Pk.ActiveMixin.Tick(time);
+			Pk.ActiveMixin.Draw();
+
 			current_time = time;
 		},
 
@@ -110,7 +126,7 @@ Pk.Timeline = (function(){
 
 
 		SetPlayMode : function(status) {
-			if ((status !== true) && (status !== false)){
+			if (!Pk.Util.IsBool(status)){
 				return;
 			} else {
 				playMode = status;

@@ -8,7 +8,7 @@ Pk.Clip = function (from, to, resources, playFunction){
 
 Pk.Clip.prototype = {
 	
-	Preload : function(){
+	Load : function(){
 		resources.forEach(function(x){x.Load();});
 	},
 
