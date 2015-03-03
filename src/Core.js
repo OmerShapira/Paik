@@ -37,12 +37,6 @@ Pk.Player = (
 
 			}
 
-		function Draw( ){ 
-
-			Pk.ActiveMixin.Draw( );
-
-		}
-
 
 
 		return { 
@@ -82,5 +76,5 @@ Pk.Player = (
 	} )( );
 
 
-
+Pk.Groups = [];
 

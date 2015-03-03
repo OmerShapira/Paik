@@ -1,14 +1,24 @@
 "use strict";
-Pk.Clip = function ( from, to, resources, playFunction ){ 
+Pk.Clip = function ( from, to, resources, group, tickFunction ){ 
 
-	this.interval 		= new Pk.Interval( from,to );
+	this.interval 		= new Pk.Interval( from, to );
 	this.interval.clip 	= this;
 	this.resources 		= resources;
-	this.playFunction 	= playFunction;
+	this.group 			= group;
+	this.tickFunction 	= tickFunction;
 
 };
 
+
+//TODO: Perhaps all of this isn't necessary?
 Pk.Clip.prototype = { 
+
+	Tick : function ( time ){
+
+		//The tick function should know about the resources.
+		tickFunction ( time );
+
+	},
 	
 	Load : function( ){ 
 
@@ -22,19 +32,15 @@ Pk.Clip.prototype = {
 
 	},
 
-	Play : function( tickService ){ 
+	Play : function( ){ 
 
 		resources.forEach( function( x ){ x.Begin( ); } );	
-		//TODO: Require parent
-		tickService.Register( this.playFunction );
 
 	},
 
-	Stop : function( tickService ){ 
+	Stop : function( ){ 
 
 		resources.forEach( function( x ){ x.End( ); } );	
-		//TODO: Require parent
-		tickService.Unregister( this.playFunction );
-		
+			
 	}
 };

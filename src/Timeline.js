@@ -57,8 +57,9 @@ Pk.Timeline = ( function( ){
 	var HandleNewClips = function( clips ){
 
 		clips.forEach( function( clip ){
+			clip.group.Unsubscribe(clip);
 			clip.resources.forEach( 
-				function( x ){Pk.ActiveMixin.Add( x );}
+				function( x ){clip.group.Add( x );}
 				); } 
 			);
 
@@ -67,8 +68,9 @@ Pk.Timeline = ( function( ){
 	var HandleRemovedClips = function( clips ){
 
 		clips.forEach( function( clip ){
+			clip.group.Unsubscribe(clip);
 			clip.resources.forEach( 
-				function( x ){Pk.ActiveMixin.Remove( x );}
+				function( x ){clip.group.Remove( x );}
 				); } 
 			);
 	};
