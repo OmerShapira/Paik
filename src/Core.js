@@ -23,7 +23,7 @@ Pk.Player = (
 
 			RequestLoop( ); 
 			//TODO ( OS ): Check timing between begin and end, to see if preloading can be done
-			
+
 			Update( hiresTimestamp );
 
 			lastCall = hiresTimestamp;

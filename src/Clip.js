@@ -1,10 +1,9 @@
 "use strict";
-Pk.Clip = function ( from, to, resources, group, tickFunction ){ 
+Pk.Clip = function ( from, to, resources, tickFunction ){ 
 
 	this.interval 		= new Pk.Interval( from, to );
 	this.interval.clip 	= this;
 	this.resources 		= resources;
-	this.group 			= group;
 	this.tickFunction 	= tickFunction;
 
 };

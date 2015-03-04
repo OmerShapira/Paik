@@ -9,6 +9,8 @@ Paik is a library for synchronising time-based events to a single video.
 * Integration with THREE.js
 
 ## Usage:
+
+Import Build\Paik.js, that's as stable as can be (source isn't, until Paik hits a tagged version).
  
  ```javascript
  
@@ -68,3 +70,6 @@ Pk.Timeline.BindTimecodeController(video.GetTimecodeController());
 video.StartPlaying();
 Pk.Player.Start();
 ```
+
+### Under development
+This software is under development. It is proven to be capable of eating your family and your backup foster family. Be careful.

@@ -48,6 +48,7 @@ Pk.Timeline = ( function( ){
 		//Finally, add the new clips to the "currently playing" set.
 		Object.keys( interval_list ).forEach( 
 
+			//TODO (OS) : This means duplicate state. Shouldn't be a thing.
 			function( key ){ IntervalsInCurrentFrame[ key ] = interval_list[ key ]; }
 
 			);
@@ -57,22 +58,17 @@ Pk.Timeline = ( function( ){
 	var HandleNewClips = function( clips ){
 
 		clips.forEach( function( clip ){
-			clip.group.Unsubscribe(clip);
-			clip.resources.forEach( 
-				function( x ){clip.group.Add( x );}
-				); } 
-			);
+				clip.group.ActivateClip(clip);
+			} );
 
 	};
 
 	var HandleRemovedClips = function( clips ){
 
 		clips.forEach( function( clip ){
-			clip.group.Unsubscribe(clip);
-			clip.resources.forEach( 
-				function( x ){clip.group.Remove( x );}
-				); } 
-			);
+			clip.group.DeactivateClip(clip);
+		} );
+
 	};
 
 	return {
@@ -91,8 +87,18 @@ Pk.Timeline = ( function( ){
 				IntervalQuery.queryInterval( current_time, time, opts );
 			}
 
-			Pk.ActiveMixin.Tick( time );
-			Pk.ActiveMixin.Draw( );
+			Pk.Groups.forEach(
+
+				function( group ){
+					group.Tick( time );
+				}	);
+
+
+			Pk.Groups.forEach(
+				function( group ){
+					group.Draw( );
+				} );
+
 
 			current_time = time;
 
