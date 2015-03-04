@@ -10,12 +10,16 @@ Pk.Group = function(name, controller){
 Pk.Group.prototype = {
 	
 	Add : function (clip){
-		if (! (clip instanceof Clip)){
+		if ( !( clip instanceof Clip ) ){
+			
 			throw "Not a valid clip";
+
 		} else {
+
 			clip.group = self;
 			//TODO (OS): Not sure this should go here
 			Pk.Timeline.Add(clip);
+
 		}
 	}
 
@@ -46,7 +50,6 @@ Pk.Group.prototype = {
 
 		//opinionated : will tick scene before components.
 		// maybe it's better to do the other way around.
-
 		controller.Tick( time );
 		subscribers.forEach(
 			function( tickFunction ){

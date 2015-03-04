@@ -57,7 +57,8 @@ Pk.Timeline = ( function( ){
 
 	var HandleNewClips = function( clips ){
 
-		clips.forEach( function( clip ){
+		clips.forEach( 
+			function( clip ){
 				clip.group.ActivateClip(clip);
 			} );
 
@@ -65,7 +66,8 @@ Pk.Timeline = ( function( ){
 
 	var HandleRemovedClips = function( clips ){
 
-		clips.forEach( function( clip ){
+		clips.forEach( 
+			function( clip ){
 			clip.group.DeactivateClip(clip);
 		} );
 
@@ -88,10 +90,9 @@ Pk.Timeline = ( function( ){
 			}
 
 			Pk.Groups.forEach(
-
 				function( group ){
 					group.Tick( time );
-				}	);
+				} );
 
 
 			Pk.Groups.forEach(
