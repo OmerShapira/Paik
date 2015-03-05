@@ -159,7 +159,7 @@ Pk.Timeline = ( function( ){
 	    		playMode = status;
 	    	}
 
-	    },
+	    }
 
 	}
 

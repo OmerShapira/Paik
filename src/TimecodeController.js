@@ -32,6 +32,6 @@ Pk.TimecodeController.prototype = {
 			
 		}
 
-	},
+	}
 
 };
