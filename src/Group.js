@@ -5,43 +5,44 @@ Pk.Group = function(name, controller){
 	this.controller = controller;
 	this.subscribers = new Set();
 	this.self = this;
+
 }
 
 Pk.Group.prototype = {
 	
-	Add : function (clip){
-		if ( !( clip instanceof Clip ) ){
+	Add : function ( clip ){
+		if ( !( clip instanceof Pk.Clip ) ){
 			
 			throw "Not a valid clip";
 
 		} else {
 
-			clip.group = self;
+			clip.group = this;
 			//TODO (OS): Not sure this should go here
-			Pk.Timeline.Add(clip);
+			Pk.Timeline.Add( clip );
 
 		}
-	}
+	},
 
 	ActivateClip : function( clip ){
 
 		//TODO (OS): check that this is a tick function
-		subscribers.add( clip.tickFunction );
+		this.subscribers.add( clip.tickFunction );
 
 		clip.resources.forEach( 
 				function( asset ){
-					controller.Add( asset );
-				}); 
+					this.controller.Add( asset );
+				}.bind(this)); 
 	},
 
 	DeactivateClip : function( clip ){
 
-		subscribers.delete( clip.tickFunction );
+		this.subscribers.delete( clip.tickFunction );
 
 		clip.resources.forEach( 
 			function( asset ){
-				controller.Remove( asset );
-			}); 
+				this.controller.Remove( asset );
+			}.bind(this)); 
 
 	},
 
@@ -50,18 +51,18 @@ Pk.Group.prototype = {
 
 		//opinionated : will tick scene before components.
 		// maybe it's better to do the other way around.
-		controller.Tick( time );
-		subscribers.forEach(
-			function( tickFunction ){
+		this.controller.Tick( time );
+		this.subscribers.forEach(
+			function( tickFunc ){
 				// TODO (OS) : Check what 'this' is bound to
-				tickFunction( time );
+				tickFunc( time );
 			} );
 
 	},
 
 	Draw : function ( ){
 
-		controller.Draw( );
+		this.controller.Draw( );
 
 	}
 }

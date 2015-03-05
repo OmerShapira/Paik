@@ -137,8 +137,15 @@ Pk.Timeline = ( function( ){
 	    		console.warn( "Trying to add clips to a built timeline" );
 	    		return;
 	    	}
+
 	    	for ( var i = arguments.length - 1; i >= 0; i-- ) {
-	    		AllClips.push( arguments[ i ] );
+
+	    		if ( arguments[i] instanceof Pk.Clip ){
+		    		AllClips.push( arguments[ i ] );
+	    		} else {
+	    			throw "Trying to add a non-clip to the timeline"
+	    		}
+
 	    	};
 
 	    },

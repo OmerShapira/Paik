@@ -1,0 +1,66 @@
+<html>
+<head></head>
+<body>
+
+	<script src= "js/vendor/three.min.js"></script>
+	<script src="../src/Paik.js"></script>
+	<script src="../src/Clip.js"></script>
+	<script src="../src/Core.js"></script>
+	<script src="../src/Group.js"></script>
+	<script src="../src/GroupController.js"></script>
+	<script src="../src/Interval.js"></script>
+	<script src="../src/Resource.js"></script>
+	<script src="../src/TimecodeController.js"></script>
+	<script src="../src/Timeline.js"></script>
+	<script src="../src/Util.js"></script>
+	<script src="../src/Video.js"></script>
+
+
+	<script type="text/javascript">
+		var obj1 = new THREE.Mesh(
+			new THREE.BoxGeometry(1,1,1), 
+			new THREE.MeshBasicMaterial({color: 0x00ff00}));
+
+		var obj2 = new THREE.Mesh(
+			new THREE.BoxGeometry(1,1,1), 
+			new THREE.MeshBasicMaterial({color: 0x0000ff}));
+
+		var scene = new THREE.Scene();
+		var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 ); 
+		camera.position.z = 5;
+		var renderer = new THREE.WebGLRenderer();
+
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		document.body.appendChild( renderer.domElement );
+
+
+		var scenectrl = new Pk.GroupController({
+			Add  	: function(x){scene.add(x)},
+			Remove  : function(x){scene.remove(x)},
+			Draw 	: function(x){renderer.render(scene, camera);},
+		});
+
+		var sceneGroup = new Pk.Group("Scene", scenectrl);
+		Pk.Groups.push(sceneGroup);
+
+		var PrintTime = function(time){console.log("TICK " + time)}
+
+		sceneGroup.Add( new Pk.Clip(0, 1500, [obj1], PrintTime));
+		sceneGroup.Add( new Pk.Clip(1700, 2700, [obj2],PrintTime));
+
+
+		Pk.Timeline.Build();
+
+		var video = Pk.Video.FromUrl("video/video.mp4");
+		Pk.Player.SetTimecodeTrack(video.GetTimecodeController());
+		video.StartPlaying();
+		Pk.Player.Start();
+
+
+	</script>
+
+
+</body>
+
+
+</html>

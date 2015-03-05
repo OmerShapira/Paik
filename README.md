@@ -8,33 +8,11 @@ Paik is a library for synchronising time-based events to a single video.
 * A Timeline to synchronise `clip` loading 
 * Integration with THREE.js
 
-## Usage:
-
-Import Build\Paik.js, that's as stable as can be (source isn't, until Paik hits a tagged version).
- 
- ```javascript
- 
- Pk.Timeline.Add(
- 	//new Pk.Clip(from_timecode, to_timecode, [assets...], tickfunction)
-	new Pk.Clip(0, 1500, clipassets_0, tickfunction_0),
-	// ...
-	new Pk.Clip(5000, 5200, clipassets_n, tickfunction_n)
-	);
-//Locks the timeline(may be removed in later versions)
-Pk.Timeline.Build();
-
-//The video object wraps a playable video
-var Video = Pk.Video.FromUrl("video/video.mp4");
-//The timecode track sends events to the player whenever the video timecode changes
-Pk.Timeline.BindTimecodeController(video.GetTimecodeController());
-
-Pk.Player.Start();
-Video.StartPlaying();
- ```
 
 ### Example Usage with Three.js:
 
 ```javascript
+//Three.JS stuff
 
 var obj1 = new THREE.Mesh(
 	new THREE.BoxGeometry(1,1,1), 
@@ -53,22 +31,30 @@ renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
 
-Pk.Timeline.Add(
-	new Pk.Clip(0, 1500, [obj1]),
-	new Pk.Clip(1700, 2700, [obj2])
-	);
-Pk.Timeline.Build();
+// Set up the scene controller.
 
-Pk.Player.ConnectMixin({
+var scenectrl = new Pk.GroupController({
 	Add  	: function(x){scene.add(x)},
 	Remove  : function(x){scene.remove(x)},
 	Draw 	: function(x){renderer.render(scene, camera);},
 });
 
+var sceneGroup = new Pk.Group("Scene", scenectrl);
+Pk.Groups.push(sceneGroup);
+
+var PrintTime = function(time){console.log("TICK " + time)}
+
+sceneGroup.Add( new Pk.Clip(0, 1500, [obj1], PrintTime));
+sceneGroup.Add( new Pk.Clip(1700, 2700, [obj2],PrintTime));
+
+
+Pk.Timeline.Build();
+
 var video = Pk.Video.FromUrl("video/video.mp4");
-Pk.Timeline.BindTimecodeController(video.GetTimecodeController());
+Pk.Player.SetTimecodeTrack(video.GetTimecodeController());
 video.StartPlaying();
 Pk.Player.Start();
+
 ```
 
 ### Under development

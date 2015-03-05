@@ -4,7 +4,7 @@ Pk.Clip = function ( from, to, resources, tickFunction ){
 	this.interval 		= new Pk.Interval( from, to );
 	this.interval.clip 	= this;
 	this.resources 		= resources;
-	this.tickFunction 	= tickFunction;
+	this.tickFunction 	= tickFunction.bind(this);
 
 };
 
