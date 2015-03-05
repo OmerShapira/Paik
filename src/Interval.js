@@ -24,7 +24,7 @@ Pk.Interval = function(from, to) {
   
   Pk.Interval.prototype.id = 0;
   
-  Pk.Interval.const = Pk.Interval.prototype;
+  Pk.Interval.cnst = Pk.Interval.prototype;
   
   Pk.Interval.prototype.SUBSET = 1;
   
@@ -65,6 +65,9 @@ Pk.IntervalTree = function() {
   
   var intervals = [];
   
+  /**
+   * @constructor
+   */
   var Node = function(from, to) {
 
     this.left = null;
@@ -134,16 +137,16 @@ Pk.IntervalTree = function() {
   var insertInterval = function(node, interval) {
 
     switch(node.segment.compareTo(interval)) {
-      case Pk.Interval.const.SUBSET:
+      case Pk.Interval.cnst.SUBSET:
         // interval of node is a subset of the specified interval or equal
         node.intervals.push(interval);
         break;
-      case Pk.Interval.const.INTERSECT_OR_SUPERSET:
+      case Pk.Interval.cnst.INTERSECT_OR_SUPERSET:
         // interval of node is a superset, have to look in both childs
         if (node.left) insertInterval(node.left, interval);
         if (node.right) insertInterval(node.right, interval);
         break;
-      case Pk.Interval.const.DISJOINT:
+      case Pk.Interval.cnst.DISJOINT:
         // nothing to do
         break;
     }
@@ -180,7 +183,7 @@ Pk.IntervalTree = function() {
 
     if (node === null) return;
     queryIntervals.forEach(function(queryInterval) {
-      if (disjointFn.call(node.segment, queryInterval) !== Pk.Interval.const.DISJOINT) {
+      if (disjointFn.call(node.segment, queryInterval) !== Pk.Interval.cnst.DISJOINT) {
         node.intervals.forEach(function(interval) {
           hits[interval.id] = interval;
         });
