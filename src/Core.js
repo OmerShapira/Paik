@@ -57,18 +57,17 @@ Pk.Player = (
 
 				},
 
-			ConnectMixin : function( mixin_options ){ 
-
-				if( Pk.Util.Exists( mixin_options ) ){ 
-					Pk.ActiveMixin = new Pk.Mixin( mixin_options );
-				}
-				
-			},
-
 			SetTimecodeTrack : function( tc_controller ) {
 
-				//TODO (OS): Check if this is a TimecodeController
-				Pk.TimecodeTrack = tc_controller;
+				if ( tc_controller instanceof Pk.TimecodeController ){
+
+					Pk.TimecodeTrack = tc_controller;
+
+				} else {
+
+					throw "Trying to set an invalid timecode controller"
+
+				}
 
 			}
 
