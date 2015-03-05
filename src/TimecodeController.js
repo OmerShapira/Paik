@@ -12,12 +12,6 @@ Pk.TimecodeController.prototype = {
 
 	currentTimecode	: 0,
 
-	Subscribe : function( callback ){
-
-		this.subscribers.push( callback );
-
-	},
-
 	SendTimecodeTick : function( time ){
 
 		Pk.Timeline.SetTimecode(time);

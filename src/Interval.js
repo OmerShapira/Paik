@@ -68,7 +68,7 @@ Pk.IntervalTree = function() {
   /**
    * @constructor
    */
-  var Node = function(from, to) {
+  var TreeNode = function(from, to) {
 
     this.left = null;
     this.right = null;
@@ -118,13 +118,13 @@ Pk.IntervalTree = function() {
     var node;
 
     if (pointArray.length === 2) {
-      node = new Node(pointArray[0], pointArray[1]);
+      node = new TreeNode(pointArray[0], pointArray[1]);
       if (pointArray[1] !== Infinity) {
-        node.left = new Node(pointArray[0], pointArray[1]);
-        node.right = new Node(pointArray[1], pointArray[1]);
+        node.left = new TreeNode(pointArray[0], pointArray[1]);
+        node.right = new TreeNode(pointArray[1], pointArray[1]);
       }
     } else {
-      node = new Node(pointArray[0], pointArray[pointArray.length - 1]);
+      node = new TreeNode(pointArray[0], pointArray[pointArray.length - 1]);
       // split array in two halfs
       var center = Math.floor(pointArray.length / 2);
       node.left = insertElements(pointArray.slice(0, center + 1));

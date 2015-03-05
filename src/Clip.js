@@ -1,5 +1,8 @@
 "use strict";
-Pk.Clip = function ( from, to, resources, tickFunction ){ 
+/**
+ * @constructor
+ */
+ Pk.Clip = function ( from, to, resources, tickFunction ){ 
 
 	this.interval 		= new Pk.Interval( from, to );
 	this.interval.clip 	= this;
