@@ -3,9 +3,6 @@
  */
 Pk.GroupController = function ( options ){
 
-	//TODO: Yes, I know it's bad, but I don't have a different solution right now
-	this.type = "Pk.GroupController";
-
 	if ( ! Pk.Util.Exists( options ) ){
 		console.error( "Not a valid GroupController" );
 		return;

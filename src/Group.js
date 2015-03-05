@@ -3,11 +3,14 @@
  */
 Pk.Group = function(name, controller){
 	
-	//TODO: Safety checks
 	this.name = name;
-	this.controller = controller;
+	if (controller instanceof Pk.GroupController){
+		this.controller = controller;
+	} else {
+		console.warn("Group " + name + ": controller argument isn't of type Pk.GropuController")
+	}
+	
 	this.subscribers = new Set();
-	this.self = this;
 
 }
 
@@ -29,8 +32,9 @@ Pk.Group.prototype = {
 
 	ActivateClip : function( clip ){
 
-		//TODO (OS): check that this is a tick function
-		this.subscribers.add( clip.tickFunction );
+		if ( Pk.Util.IsFunction( clip.tickFunction ) ){
+			this.subscribers.add( clip.tickFunction );
+		};
 
 		clip.resources.forEach( 
 				function( asset ){
@@ -40,7 +44,9 @@ Pk.Group.prototype = {
 
 	DeactivateClip : function( clip ){
 
-		this.subscribers.delete( clip.tickFunction );
+		if ( Pk.Util.IsFunction( clip.tickFunction ) ){
+			this.subscribers.delete( clip.tickFunction );
+		};
 
 		clip.resources.forEach( 
 			function( asset ){
@@ -52,8 +58,7 @@ Pk.Group.prototype = {
 
 	Tick : function ( time ){
 
-		//opinionated : will tick scene before components.
-		// maybe it's better to do the other way around.
+		//Tick scene before components.
 		this.controller.Tick( time );
 		this.subscribers.forEach(
 			function( tickFunc ){
