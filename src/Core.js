@@ -69,6 +69,13 @@ Pk.Player = (
 
 				}
 
+			},
+
+			Build : function (){
+
+				//Build the timeline
+				Pk.Timeline.Build();
+
 			}
 
 		}
