@@ -1,3 +1,6 @@
+/**
+ * @constructor
+ */
 Pk.GroupController = function ( options ){
 
 	//TODO: Yes, I know it's bad, but I don't have a different solution right now

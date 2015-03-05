@@ -1,3 +1,6 @@
+/**
+ * @constructor
+ */
 Pk.Group = function(name, controller){
 	
 	//TODO: Safety checks

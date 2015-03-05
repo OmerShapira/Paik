@@ -1,3 +1,6 @@
+/**
+ * @constructor
+ */
 Pk.Video = function( video_element ){
 
 	time = -0.01; //Before start

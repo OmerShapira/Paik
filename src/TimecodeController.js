@@ -1,3 +1,6 @@
+/**
+ * @constructor
+ */
 Pk.TimecodeController = function( getTime ){
 
 	timePoll = getTime;

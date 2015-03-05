@@ -10,11 +10,16 @@
 
 "use strict";
 
+/**
+ * @constructor
+ */
 Pk.Interval = function(from, to) {
+
     this.id = ++Pk.Interval.prototype.id;
     this.from = from;
     this.to = to;
     this.overlap = {};
+
   }
   
   Pk.Interval.prototype.id = 0;
@@ -51,7 +56,9 @@ Pk.Interval = function(from, to) {
 
   }
 
-
+/**
+ * @constructor
+ */
 Pk.IntervalTree = function() {
   
   var root = null;
