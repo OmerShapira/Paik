@@ -39,21 +39,29 @@ var scenectrl = new Pk.GroupController({
 	Draw 	: function(x){renderer.render(scene, camera);},
 });
 
+
+//Set up a group for controlling the 3d scene
+
 var sceneGroup = new Pk.Group("Scene", scenectrl);
 Pk.Groups.push(sceneGroup);
 
+//This update function is here to prove that updates can be sent once every 40 ms
 var PrintTime = function(time){console.log("TICK " + time)}
 
+//Adds two clips with one asset each
 sceneGroup.Add( new Pk.Clip(0, 1500, [obj1], PrintTime));
 sceneGroup.Add( new Pk.Clip(1700, 2700, [obj2],PrintTime));
 
-
+//seals the timeline
 Pk.Timeline.Build();
 
+//sets up a video source and listeners for its timecode signal
 var video = Pk.Video.FromUrl("video/video.mp4");
 Pk.Player.SetTimecodeTrack(video.GetTimecodeController());
-video.StartPlaying();
+
+//starts the player, then starts the video (which sends timecode)
 Pk.Player.Start();
+video.StartPlaying();
 
 ```
 
