@@ -1,0 +1,16 @@
+// ==ClosureCompiler==
+// @compilation_level SIMPLE_OPTIMIZATIONS
+// @output_file_name Paik.js
+// @code_url https://raw.githubusercontent.com/OmerShapira/Paik/master/src/Clip.js
+// @code_url https://raw.githubusercontent.com/OmerShapira/Paik/master/src/Core.js
+// @code_url https://raw.githubusercontent.com/OmerShapira/Paik/master/src/Group.js
+// @code_url https://raw.githubusercontent.com/OmerShapira/Paik/master/src/GroupController.js
+// @code_url https://raw.githubusercontent.com/OmerShapira/Paik/master/src/Interval.js
+// @code_url https://raw.githubusercontent.com/OmerShapira/Paik/master/src/Paik.js
+// @code_url https://raw.githubusercontent.com/OmerShapira/Paik/master/src/Resource.js
+// @code_url https://raw.githubusercontent.com/OmerShapira/Paik/master/src/TimecodeController.js
+// @code_url https://raw.githubusercontent.com/OmerShapira/Paik/master/src/Timeline.js
+// @code_url https://raw.githubusercontent.com/OmerShapira/Paik/master/src/Util.js
+// @code_url https://raw.githubusercontent.com/OmerShapira/Paik/master/src/Video.js
+// ==/ClosureCompiler==
+
